@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SmartHostel | Student Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="home.css">
+
+
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f3f4f6;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 60px;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .navbar h2 {
+            font-weight: 600;
+        }
+
+        .nav-links a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .login-btn {
+            padding: 6px 16px;
+            border: 1px solid #2563eb;
+            color: #2563eb;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        /* MAIN DASHBOARD */
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            padding: 60px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .card h3 {
+            margin-bottom: 20px;
+        }
+
+        .room-box {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .room-number {
+            font-size: 26px;
+            font-weight: 600;
+            color: #2563eb;
+        }
+
+        .notice-item {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        /* SMART SECTION */
+        .smart-section {
+            padding: 0 60px 60px 60px;
+        }
+
+        .smart-card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .smart-card h3 {
+            margin-bottom: 10px;
+        }
+
+        .smart-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .smart-options label {
+            font-size: 14px;
+        }
+
+        .smart-btn {
+            padding: 10px 20px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .smart-result {
+            margin-top: 20px;
+            font-weight: 500;
+        }
+
+        /* RESPONSIVE */
+        @media(max-width: 900px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        .room-change-section {
+    padding: 40px 60px;
+}
+
+.room-change-card {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.room-change-card h2 {
+    margin-bottom: 10px;
+}
+
+.sub-text {
+    color: #6b7280;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.room-change-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.room-change-card select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+}
+
+.preferences {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.submit-btn {
+    width: 200px;
+    padding: 10px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background: #1e40af;
+}
+
+.request-status {
+    margin-top: 30px;
+}
+
+.request-status ul {
+    list-style: none;
+    padding: 0;
+}
+
+.request-status li {
+    padding: 10px;
+    background: #f9fafb;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.status {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.approved {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.rejected {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+     <nav class="navbar">
+    <div class="logo">SmartHostel</div>
+
+    <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li class="student-link"><a href="dashboard.html">Student Dashboard</a></li>
+        <li class="student-link"><a href="complaint.html">Complaint Management</a></li>
+        <li class="student-link"><a href="visitor.html">Visitor Entry</a></li>
+        <li class="admin-link"><a href="admin.html">Admin Dashboard</a></li>
+    </ul>
+
+    <a href="#" id="logoutBtn" class="login-btn">Logout</a>
+</nav>
+
+         
+
+    <!-- DASHBOARD CONTENT -->
+    <div class="dashboard-container">
+
+        <!-- LEFT SIDE -->
+        <div class="card">
+            <h3>🏠 Your Room Details</h3>
+
+            <div class="room-box">
+                <p>Room Number</p>
+                <div class="room-number">B-204</div>
+            </div>
+
+            <div class="room-box">
+                <p>Block</p>
+                <strong>Block B</strong>
+            </div>
+
+            <div class="room-box">
+                <p>Bed Number</p>
+                <strong>Bed 3</strong>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="card">
+            <h3>📢 Notice Board</h3>
+
+            <div class="notice-item">
+                <strong>Mess Timings Updated</strong>
+                <p>Breakfast: 7-9 AM | Lunch: 12-2 PM | Dinner: 7-9 PM</p>
+            </div>
+
+            <div class="notice-item">
+                <strong>Maintenance Schedule</strong>
+                <p>Water supply interruption on Sunday 9AM–12PM.</p>
+            </div>
+
+            <div class="notice-item">
+                <strong>Visitor Policy Reminder</strong>
+                <p>Visitors allowed 10AM–6PM only.</p>
+            </div>
+        </div>
+
+    </div>
+   <!-- Room Change Section -->
+<div class="room-change-section">
+    <div class="room-change-card">
+        <h2>🔄 Request Room Change</h2>
+        <p class="sub-text">Submit a request if you would like to change your current room.</p>
+
+        <form id="roomChangeForm">
+
+            <label>Reason for Change</label>
+            <select name="reason" required>
+                <option value="">Select Reason</option>
+                <option value="conflict">Roommate Conflict</option>
+                <option value="maintenance">Maintenance Issue</option>
+                <option value="personal">Personal Preference</option>
+            </select>
+
+            <label>Select Preferences</label>
+            <div class="preferences">
+                <label><input type="checkbox" value="quiet"> Quiet Zone</label>
+                <label><input type="checkbox" value="washroom"> Near Washroom</label>
+                <label><input type="checkbox" value="stairs"> Near Stairs</label>
+                <label><input type="checkbox" value="ac"> AC Required</label>
+            </div>
+
+            <button type="submit" class="submit-btn">Submit Request</button>
+        </form>
+
+        <!-- Request Status List -->
+        <div class="request-status">
+            <h3>Your Requests</h3>
+            <ul id="requestList">
+                <li>
+                    Room Change - <span class="status pending">Pending</span>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+
+   
+    <script>
+        function suggestRoom() {
+            document.getElementById("result").innerHTML =
+                "⭐ Recommended Room: A-203 <br> Match Score: 92%";
+        }
+    </script>
+    <script>
+document.getElementById("roomChangeForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const list = document.getElementById("requestList");
+
+    const newItem = document.createElement("li");
+    newItem.innerHTML = `
+        Room Change - <span class="status pending">Pending</span>
+    `;
+
+    list.appendChild(newItem);
+
+    alert("Room change request submitted!");
+});
+</script>
+<script>
+const role = localStorage.getItem("role");
+
+if (!role) {
+    window.location.href = "login.html";
+}
+
+const studentLinks = document.querySelectorAll(".student-link");
+const adminLinks = document.querySelectorAll(".admin-link");
+
+if (role === "student") {
+    adminLinks.forEach(link => link.style.display = "none");
+}
+
+if (role === "admin") {
+    studentLinks.forEach(link => link.style.display = "none");
+}
+
+const logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", function() {
+        localStorage.removeItem("role");
+        window.location.href = "login.html";
+    });
+}
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const role = localStorage.getItem("role");
+
+    // If not logged in → go to login
+    if (!role) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    const studentLinks = document.querySelectorAll(".student-link");
+    const adminLinks = document.querySelectorAll(".admin-link");
+
+    if (role === "student") {
+        // Hide Admin Dashboard for students
+        adminLinks.forEach(link => link.style.display = "none");
+    }
+
+    if (role === "admin") {
+        // Show everything for admin
+        adminLinks.forEach(link => link.style.display = "block");
+        studentLinks.forEach(link => link.style.display = "block");
+    }
+
+    // Logout
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", function () {
+            localStorage.removeItem("role");
+            window.location.href = "login.html";
+        });
+    }
+
+});
+</script>
+
+
+
+</body>
+</html>

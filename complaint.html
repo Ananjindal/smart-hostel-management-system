@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SmartHostel | Complaint Management</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="home.css">
+
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:url("Background.png") no-repeat center center fixed;
+    background-size:cover;
+}
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:rgba(255,255,255,0.92);
+    z-index:-1;
+}
+
+/* NAVBAR */
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 60px;
+    background:white;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.nav-links a{
+    margin:0 15px;
+    text-decoration:none;
+    color:#374151;
+    font-size:14px;
+}
+
+/* SECTION TITLE */
+.section-title{
+    text-align:center;
+    margin:50px 0 30px;
+}
+
+.section-title h2{
+    font-size:32px;
+}
+
+.section-title p{
+    color:#6b7280;
+    margin-top:10px;
+}
+
+/* FORM */
+.complaint-form{
+    max-width:800px;
+    margin:0 auto 60px;
+    background:white;
+    padding:30px;
+    border-radius:16px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+.complaint-form input,
+.complaint-form select,
+.complaint-form textarea{
+    width:100%;
+    padding:12px;
+    margin-bottom:15px;
+    border-radius:8px;
+    border:1px solid #d1d5db;
+}
+
+.complaint-form button{
+    width:100%;
+    padding:12px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+/* COMPLAINT CARDS */
+.cards{
+    max-width:1200px;
+    margin:0 auto 80px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:30px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:14px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.06);
+}
+
+.status{
+    float:right;
+    padding:4px 10px;
+    border-radius:6px;
+    font-size:12px;
+}
+
+.pending{ background:#fef3c7; color:#92400e;}
+.progress{ background:#dbeafe; color:#1e40af;}
+.resolved{ background:#d1fae5; color:#065f46;}
+
+.view-btn{
+    margin-top:15px;
+    width:100%;
+    padding:8px;
+    border-radius:8px;
+    border:1px solid #d1d5db;
+    background:white;
+    cursor:pointer;
+}
+
+/* DETAILS SECTION */
+.details{
+    max-width:800px;
+    margin:0 auto 100px;
+    background:white;
+    padding:30px;
+    border-radius:16px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+    display:none;
+}
+
+.footer{
+    text-align:center;
+    padding:20px;
+    background:white;
+    border-top:1px solid #e5e7eb;
+}
+</style>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">SmartHostel</div>
+
+    <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li class="student-link"><a href="dashboard.html">Student Dashboard</a></li>
+        <li class="student-link"><a href="complaint.html">Complaint Management</a></li>
+        <li class="student-link"><a href="visitor.html">Visitor Entry</a></li>
+        <li class="admin-link"><a href="admin.html">Admin Dashboard</a></li>
+    </ul>
+
+    <a href="#" id="logoutBtn" class="login-btn">Logout</a>
+</nav>
+
+<!-- TITLE -->
+<div class="section-title">
+    <h2>Submit Complaint</h2>
+    <p>Report any issues about your hostel room or facilities.</p>
+</div>
+
+<!-- FORM -->
+<form class="complaint-form" id="complaintForm">
+
+    <input type="text" id="name" placeholder="Your Name" required>
+    <input type="email" id="email" placeholder="Email Address" required>
+    <input type="text" id="room" placeholder="Room Number" required>
+
+    <select id="type">
+        <option value="">Select Complaint Type</option>
+        <option>Maintenance</option>
+        <option>Electrical</option>
+        <option>Plumbing</option>
+        <option>Hygiene</option>
+        <option>Network</option>
+    </select>
+
+    <textarea id="description" rows="4" placeholder="Describe the issue..."></textarea>
+
+    <button type="submit">Submit Complaint</button>
+</div>
+
+<!-- MY COMPLAINTS -->
+<div class="section-title">
+    <h2>My Complaints</h2>
+    <p>Track and manage your complaints.</p>
+</div>
+
+<div class="cards" id="cardsContainer">
+</div>
+
+<!-- DETAILS -->
+<div class="details" id="detailsSection">
+    <h3 id="detailTitle"></h3>
+    <p id="detailDescription"></p>
+</div>
+</form>
+<!-- FOOTER -->
+<div class="footer">
+    © 2026 SmartHostel. All rights reserved.
+</div>
+
+<script>
+
+// Load complaints when page opens
+document.addEventListener("DOMContentLoaded", function () {
+    loadComplaints();
+});
+
+function submitComplaint(){
+
+    const name = document.getElementById("name").value;
+    const type = document.getElementById("type").value;
+    const description = document.getElementById("description").value;
+
+    if(type === "" || description === "" || name === ""){
+        alert("Please fill all fields");
+        return;
+    }
+
+    let complaints = JSON.parse(localStorage.getItem("complaints")) || [];
+
+    const newComplaint = {
+        id: "C" + Date.now(),
+        student: name,
+        type: type,
+        description: description,
+        status: "Pending"
+    };
+
+    complaints.push(newComplaint);
+
+    localStorage.setItem("complaints", JSON.stringify(complaints));
+
+    alert("Complaint Submitted Successfully!");
+
+    location.reload();
+}
+
+function loadComplaints(){
+
+    let complaints = JSON.parse(localStorage.getItem("complaints")) || [];
+
+    const container = document.getElementById("cardsContainer");
+    container.innerHTML = "";
+
+    complaints.forEach(function(complaint){
+
+        const card = document.createElement("div");
+        card.classList.add("card");
+
+        card.innerHTML = `
+            <h3>${complaint.type}
+                <span class="status pending">${complaint.status}</span>
+            </h3>
+            <p>${complaint.description.substring(0,80)}...</p>
+           <button type="submit">Submit Complaint</button>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+function viewDetails(title, description){
+    document.getElementById("detailsSection").style.display = "block";
+    document.getElementById("detailTitle").innerText = title;
+    document.getElementById("detailDescription").innerText = description;
+
+    window.scrollTo({
+        top: document.getElementById("detailsSection").offsetTop,
+        behavior:"smooth"
+    });
+}document.getElementById("complaintForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    submitComplaint();
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const role = localStorage.getItem("role");
+
+    // If not logged in → go to login
+    if (!role) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    const studentLinks = document.querySelectorAll(".student-link");
+    const adminLinks = document.querySelectorAll(".admin-link");
+
+    if (role === "student") {
+        // Hide Admin Dashboard for students
+        adminLinks.forEach(link => link.style.display = "none");
+    }
+
+    if (role === "admin") {
+        // Show everything for admin
+        adminLinks.forEach(link => link.style.display = "block");
+        studentLinks.forEach(link => link.style.display = "block");
+    }
+
+    // Logout
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", function () {
+            localStorage.removeItem("role");
+            window.location.href = "login.html";
+        });
+    }
+
+});
+</script>
+</body>
+</html>

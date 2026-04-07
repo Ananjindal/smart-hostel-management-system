@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register - SmartHostel</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f3f4f6;
+            font-family: Arial, sans-serif;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 300px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+        h2 { margin-top: 0; }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover { background: #059669; }
+        button:disabled { background: #6ee7b7; cursor: not-allowed; }
+        .login-link {
+            display: block;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .error-msg {
+            color: #dc2626;
+            font-size: 13px;
+            margin-bottom: 10px;
+            display: none;
+        }
+        .success-msg {
+            color: #059669;
+            font-size: 13px;
+            margin-bottom: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h2>Register</h2>
+    <div class="error-msg"   id="errorMsg"></div>
+    <div class="success-msg" id="successMsg"></div>
+
+    <input type="text"     id="name"     placeholder="Full Name">
+    <input type="email"    id="email"    placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+
+    <button id="registerBtn" onclick="register()">Create Account</button>
+    <a href="login.html" class="login-link">Already have an account? Login</a>
+</div>
+
+<script>
+    const API_KEY = "pub_20d7455d26060469a4c90db144e98f8e1e71a5636ce0ed54d29b0e85520a8695";
+
+    async function register() {
+        const name     = document.getElementById("name").value.trim();
+        const email    = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const errEl    = document.getElementById("errorMsg");
+        const okEl     = document.getElementById("successMsg");
+        const btn      = document.getElementById("registerBtn");
+
+        errEl.style.display = "none";
+        okEl.style.display  = "none";
+
+        if (!name || !email || !password) {
+            errEl.innerText = "Please fill in all fields.";
+            errEl.style.display = "block";
+            return;
+        }
+
+        // Check if already registered locally
+        let users = JSON.parse(localStorage.getItem("registeredUsers")) || [];
+        if (users.find(u => u.email === email)) {
+            errEl.innerText = "This email is already registered.";
+            errEl.style.display = "block";
+            return;
+        }
+
+        btn.disabled  = true;
+        btn.innerText = "Registering...";
+
+        // Fire API call in background (for demonstration)
+        // reqres.in only accepts specific test emails so we don't rely on its response
+        fetch("https://reqres.in/api/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-api-key": API_KEY
+            },
+            body: JSON.stringify({ email, password })
+        }).catch(() => {}); // silently ignore if API rejects
+
+        // Always save locally — this is what makes ANY email work
+        users.push({ name, email, password, role: "student" });
+        localStorage.setItem("registeredUsers", JSON.stringify(users));
+
+        okEl.innerText = "Account created successfully! Redirecting to login...";
+        okEl.style.display = "block";
+
+        btn.disabled  = false;
+        btn.innerText = "Create Account";
+
+        setTimeout(() => { window.location.href = "login.html"; }, 1500);
+    }
+</script>
+</body>
+</html>
