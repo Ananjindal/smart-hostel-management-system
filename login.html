@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SmartHostel | Login & Register</title>
+    <style>
+        body {
+            font-family: Arial;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f3f4f6;
+            margin: 0;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 300px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        h2 { margin-top: 0; color: #1f2937; }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover { background: #1e40af; }
+
+        .toggle-link {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        .toggle-link span {
+            color: #2563eb;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="card" id="loginCard">
+    <h2>Login</h2>
+    <input type="email" id="loginEmail" placeholder="Email">
+    <input type="password" id="loginPassword" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <div class="toggle-link">
+        Don't have an account? <span onclick="toggleCards()">Register here</span>
+    </div>
+</div>
+
+<div class="card hidden" id="registerCard">
+    <h2>Register</h2>
+    <input type="email" id="regEmail" placeholder="Email">
+    <input type="password" id="regPassword" placeholder="Password">
+    <button onclick="register()" style="background: #10b981;">Create Account</button>
+    <div class="toggle-link">
+        Already have an account? <span onclick="toggleCards()">Login here</span>
+    </div>
+</div>
+
+<script>
+    // 1. Toggle between Login and Register view
+    function toggleCards() {
+        document.getElementById("loginCard").classList.toggle("hidden");
+        document.getElementById("registerCard").classList.toggle("hidden");
+    }
+
+    // 2. Registration Logic
+    function register() {
+        const email = document.getElementById("regEmail").value;
+        const password = document.getElementById("regPassword").value;
+
+        if (!email || !password) {
+            alert("Please fill in all fields");
+            return;
+        }
+
+        // Get existing users from localStorage or start a new list
+        let users = JSON.parse(localStorage.getItem("registeredUsers")) || [];
+
+        // Check if user already exists
+        if (users.find(u => u.email === email)) {
+            alert("User already registered!");
+            return;
+        }
+
+        // Add new user (default role is student)
+        users.push({ email: email, password: password, role: "student" });
+        localStorage.setItem("registeredUsers", JSON.stringify(users));
+
+        alert("Registration successful! You can now login.");
+        toggleCards(); // Switch back to login
+    }
+
+    // 3. Login Logic
+    function login() {
+        const email = document.getElementById("loginEmail").value;
+        const password = document.getElementById("loginPassword").value;
+
+        // Default Hardcoded Users
+        const adminEmail = "admin@smarthostel.com";
+        const adminPass = "123456";
+
+        // Get registered users from localStorage
+        let users = JSON.parse(localStorage.getItem("registeredUsers")) || [];
+
+        // Check Admin first
+        if (email === adminEmail && password === adminPass) {
+            localStorage.setItem("role", "admin");
+            window.location.href = "home.html";
+        } 
+        // Check if credentials match any registered user
+        else {
+            const foundUser = users.find(u => u.email === email && u.password === password);
+            
+            if (foundUser) {
+                localStorage.setItem("role", foundUser.role);
+                window.location.href = "home.html";
+            } else {
+                alert("Invalid credentials. Try again or Register.");
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
